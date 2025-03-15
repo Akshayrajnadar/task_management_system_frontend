@@ -10,8 +10,8 @@ export const Footer = () => {
           <Container maxWidth="lg">
             <Grid container spacing={3} justifyContent="center">
               <Grid item xs={12} sm={4}>
-                <Typography variant="h6">Greenways Shipping</Typography>
-                <Typography variant="body2">Reliable customs clearance & shipping services.</Typography>
+                <Typography variant="h6">TMS</Typography>
+                <Typography variant="body2">Reliable Task Management System</Typography>
               </Grid>
     
               <Grid item xs={12} sm={4}>

@@ -27,7 +27,7 @@ export const Navbar = () => {
               to="/"
               sx={{ textDecoration: "none", color: "white", flexGrow: 1 }}
             >
-              Greenways Shipping
+              TMS
             </Typography>
   
             {/* Center Navigation */}
