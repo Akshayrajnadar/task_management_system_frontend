@@ -1,20 +1,61 @@
 import React, { useState } from "react";
 import { Container, TextField, Button, Typography, Box, Paper } from "@mui/material";
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-
+  // const fetchId = async () => {
+  //   try {
+  //     const res = await axios.get("http://localhost:3001/user/userid");
+  //   }catch(error) {
+  //     console.error('Error fetching user id:', error);
+  //   }
+  // }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Email:", email, "Password:", password);
-    const res = await axios.post("http://localhost:5000/user/userlogin", {
+    try {
+      e.preventDefault();
+      // console.log("Email:", email, "Password:", password);
+      const res = await axios.post("http://localhost:3001/user/userlogin", {
         email: email,
         password: password,
-    })
+      })
+      Cookies.set('email', email)
+      console.log('Response:', res.data);
+      setLoading(false)
+      toast.success('Loging in successfully!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      navigate('/dashbord');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('An error occured!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      if (error.response) {
+        console.error('Response details:', error.response);
+      }
+    }
   };
 
   return (
@@ -47,7 +88,7 @@ export const Login = () => {
             />
           </Box>
           <Button type="submit" variant="contained" color="primary" fullWidth>
-            Login
+            {loading ? "Loading..." : "Login"}
           </Button>
         </form>
         <Box mt={2}>
@@ -60,4 +101,3 @@ export const Login = () => {
   );
 };
 
- 

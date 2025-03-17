@@ -16,7 +16,7 @@ export const Signup = () => {
     e.preventDefault();
     console.log("Name:", name, "Email:", email, "Password:", password);
     try{
-    const res = await axios.post("http://localhost:5000/user/adduser", {
+    const res = await axios.post("http://localhost:3001/user/adduser", {
         name: name,
         email: email,
         password: password,
@@ -33,7 +33,7 @@ export const Signup = () => {
                                               draggable: true,
                                               progress: undefined,
                                           });
-      navigate('/login');
+      navigate('/signin');
     } catch (error) {
         console.error('Error submitting form:', error);
         toast.error('An error occured!', {
