@@ -6,48 +6,64 @@ import Cookies from 'js-cookie';
 export const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null); // Changed from `setuser` to `setUser` for consistency
-
-  console.log('User:', user);
-  console.log('Tasks:', tasks);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-      getUserDetails();
+    getUserDetails();
   }, []);
 
   useEffect(() => {
-      if (user && user.data._id) {
-          fetchTasks();
-      }
+    if (user) {
+      fetchTasks();
+    }
   }, [user]); // Runs when user is updated
 
   const getUserDetails = async () => {
     try {
-      const email = Cookies.get('email');
-      console.log("Email:", email);
-      const res = await axios.post("http://localhost:3001/user/getUser", {
-        email: email,
-      });
-      console.log("User details:", res.data);
-      setUser(res.data); // Update state with user data
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    }
-  };
+        const email = Cookies.get('email');
+        if (!email) {
+            console.error("No email found in cookies");
+            return;
+        }
 
-  const fetchTasks = async () => {
-    if (!user || !user._id) return; // Ensure user exists before making the request
-    setLoading(true);
-    try {
-      const id = user._id;
-      console.log('User ID:', id);
-      const response = await axios.get(`http://localhost:3001/task/getTaskById/${id}`);
-      setTasks(response.data);
+        console.log("Email:", email);
+        const res = await axios.post("http://localhost:3001/user/getUser", { email });
+
+        if (res.data && res.data.data) {
+            console.log("User details:", res.data.data);
+            setUser(res.data.data); // Correctly setting user with extracted data
+        } else {
+            console.error("Invalid user response:", res.data);
+        }
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+        console.error("Error fetching user details:", error);
     }
-    setLoading(false);
-  };
+};
+
+
+const fetchTasks = async () => {
+  if (!user || !user._id) return;
+  
+  setLoading(true);
+  try {
+      console.log("Fetching tasks for User ID:", user._id);
+      const response = await axios.get(`http://localhost:3001/task/getTaskByUserId/${user._id}`);
+
+      if (response.data && response.data.data) {
+          setTasks(response.data.data); // Correctly accessing tasks
+      } else {
+          console.error("Invalid tasks response:", response.data);
+          setTasks([]); // Ensure no error if no tasks found
+      }
+
+      // Remove cookies only after successfully fetching tasks
+      Cookies.remove('userid');
+      Cookies.remove('email');
+  } catch (error) {
+      console.error("Error fetching tasks:", error);
+  }
+  setLoading(false);
+};
 
   const getStatusColor = (status) => {
     switch (status) {
