@@ -68,8 +68,7 @@ const fetchTasks = async () => {
       }
 
       // Remove cookies only after successfully fetching tasks
-      Cookies.remove('userid');
-      Cookies.remove('email');
+      
   } catch (error) {
       console.error("Error fetching tasks:", error);
   }
@@ -84,9 +83,10 @@ const updateTaskStatus = async (taskId, newStatus) => {
         task._id === taskId ? { ...task, status: newStatus } : task
       )
     );
+    
 
     // Send update request to the backend
-    await axios.put(`http://localhost:3001/task/updatetask/${taskId}`, { status: newStatus });
+    await axios.put(`http://localhost:3001/task/updatetaskstatus/${taskId}`, { status: newStatus });
 
     // Fetch updated tasks to ensure UI reflects backend changes
     fetchTasks();

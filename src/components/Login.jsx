@@ -24,6 +24,8 @@ export const Login = () => {
     try {
       e.preventDefault();
       // console.log("Email:", email, "Password:", password);
+      Cookies.remove('userid');
+      Cookies.remove('email');
       const res = await axios.post("http://localhost:3001/user/userlogin", {
         email: email,
         password: password,
